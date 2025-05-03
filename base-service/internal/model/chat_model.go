@@ -29,3 +29,7 @@ type User struct {
 	Name   string `json:"name"`
 	Avatar string `json:"avatar"`
 }
+type ChatObjResponse struct {
+	ChatType ChatType    `json:"chatType"`
+	Data     interface{} `json:"data"`
+}

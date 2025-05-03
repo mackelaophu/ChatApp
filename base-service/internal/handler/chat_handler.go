@@ -42,11 +42,11 @@ func (Handler *ChatHandler) processDispatch(s *melody.Session, msg []byte) {
 	}
 	switch chatObj.ChatType {
 	case model.GetAllUser:
-		break
+		Handler.GetAllUser(s)
 	case model.Disconnect:
-		break
+		Handler.processDisconnect(s)
 	case model.Message:
-		break
+		Handler.processMessage(&chatObj)
 	}
 }
 func (Handler *ChatHandler) processRegister(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +59,26 @@ func (Handler *ChatHandler) processRegister(w http.ResponseWriter, r *http.Reque
 		http.Error(w, "parse json failed", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("register user:", user)
+	Handler.Service.SaveUser(&user)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"status":"ok"}`))
+}
+func (Handler *ChatHandler) GetAllUser(s *melody.Session) {
+	users := Handler.Service.GetAllUser()
+	resp := model.ChatObjResponse{
+		ChatType: model.GetAllUser,
+		Data:     users,
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		fmt.Println("invalid json")
+		return
+	}
+	s.Write(data)
+}
+func (Handler *ChatHandler) processDisconnect(s *melody.Session) {
+
+}
+func (Handler *ChatHandler) processMessage(chatObj *model.ChatObjc) {
+
 }
