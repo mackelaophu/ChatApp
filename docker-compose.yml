@@ -5,6 +5,10 @@ services:
     build: ./base-service
     ports:
       - "1212:1212"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PWD="123"
   redis:
     image: redis:7
     ports:
